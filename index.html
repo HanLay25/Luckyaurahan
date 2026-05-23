@@ -6,7 +6,7 @@
     <title>LuckyAuraHan - SMM Panel</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #111; color: #fff; text-align: center; padding: 50px; }
-        .container { max-width: 500px; margin: auto; background: #222; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(255,105,180,0.3); }
+        .container { max-width: 500px; margin: auto; background: #222; padding: 30px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
         h1 { color: #ff69b4; }
         select, input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; font-size: 16px; box-sizing: border-box; }
         button { background: #ff69b4; color: white; font-weight: bold; cursor: pointer; }
@@ -33,19 +33,51 @@
     </div>
 
     <script>
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const service = document.getElementById('service').value;
-            const link = document.getElementById('link').value;
-            const qty = document.getElementById('quantity').value;
-            const statusMsg = document.getElementById('statusMsg');
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const api_url = 'https://socialfastmm.com/api/v2';
+        // 👇 အောက်က line မှာ ကိုယ့် API Key အစစ်ကိုပဲ သေချာ အစားထိုးထည့်ပေးပါနော်
+        const api_key = 
+        cd2340c86f99bfba340a21a9eaa23bcd
+        const service = document.getElementById('service').value;
+        const link = document.getElementById('link').value;
+        const qty = document.getElementById('quantity').value;
+        const statusMsg = document.getElementById('statusMsg');
+        
+        statusMsg.innerText = "အော်ဒါကို API SMM စနစ်ဖြင့် ဆောင်ရွက်နေပါသည်...";
+        statusMsg.style.color = "#ff69b4";
 
-            statusMsg.innerText = "Order ကို API စနစ်ဖြင့် ဆက်သွယ်နေပါသည်...";
-
-            setTimeout(() => {
-                statusMsg.innerText = "Order တင်ခြင်း အောင်မြင်ပါသည်။ (Demo Mode)";
-            }, 2000);
-        });
+        try {
+            const response = await fetch(api_url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    key: api_key,
+                    action: 'add',
+                    service: service,
+                    link: link,
+                    quantity: qty
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.order) {
+                statusMsg.innerText = `✅ အော်ဒါ အောင်မြင်ပါသည်။ Order ID: ${data.order}`;
+                statusMsg.style.color = "#00ff00";
+            } else if (data.error) {
+                statusMsg.innerText = `❌ Error: ${data.error}`;
+                statusMsg.style.color = "#ff0000";
+            } else {
+                statusMsg.innerText = "❌ စနစ်ချို့ယွင်းမှု ဖြစ်သွားပါသည်။";
+                statusMsg.style.color = "#ff0000";
+            }
+        } catch (error) {
+            statusMsg.innerText = "❌ API နှင့် ချိတ်ဆက်ရတာ အဆင်မပြေပါ။";
+            statusMsg.style.color = "#ff0000";
+        }
+    });
     </script>
 </body>
 </html>
