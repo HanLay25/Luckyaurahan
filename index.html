@@ -11,7 +11,7 @@
         select, input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; font-size: 16px; box-sizing: border-box; }
         button { background: #ff69b4; color: white; font-weight: bold; cursor: pointer; }
         button:hover { background: #ff1493; }
-        .status { margin-top: 15px; color: #00ff00; font-weight: bold; }
+        .status { margin-top: 15px; color: #00ff00; font-weight: bold; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -21,12 +21,12 @@
         
         <form id="orderForm">
             <select id="service">
-                <option value="1">TikTok Followers [High Quality]</option>
-                <option value="2">TikTok Likes [Instant]</option>
-                <option value="3">TikTok Views [Super Fast]</option>
+                <option value="1000">ID: 1000 - TikTok Followers [High Quality] (Min: 100 / Max: 10000)</option>
+                <option value="2000">ID: 2000 - TikTok Likes [Instant] (Min: 100 / Max: 50000)</option>
+                <option value="3000">ID: 3000 - TikTok Views [Super Fast] (Min: 500 / Max: 100000)</option>
             </select>
             <input type="url" id="link" placeholder="သင့် TikTok ဗီဒီယို သို့မဟုတ် အကောင့် Link ထည့်ပါ" required>
-            <input type="number" id="quantity" placeholder="အရေအတွက် (ဥပမာ - ၁၀၀၀)" required>
+            <input type="number" id="quantity" placeholder="အရေအတွက် ထည့်ပါ (ဥပမာ - ၁၀၀၀)" required>
             <button type="submit">Order တင်မည်</button>
         </form>
         <div class="status" id="statusMsg"></div>
@@ -37,9 +37,8 @@
         e.preventDefault();
         
         const api_url = 'https://socialfastmm.com/api/v2';
-        // 👇 အောက်က line မှာ ကိုယ့် API Key အစစ်ကိုပဲ သေချာ အစားထိုးထည့်ပေးပါနော်
-        const api_key = cd2340c86f99bfba340a21a9eaa23bcd
-        cd2340c86f99bfba340a21a9eaa23bcd
+        const api_key = 'cd2340c86ff99fba340a21aeaa23bcd'; // Han ရဲ့ API Key အစစ်
+        
         const service = document.getElementById('service').value;
         const link = document.getElementById('link').value;
         const qty = document.getElementById('quantity').value;
@@ -64,17 +63,17 @@
             const data = await response.json();
             
             if (data.order) {
-                statusMsg.innerText = `✅ အော်ဒါ အောင်မြင်ပါသည်။ Order ID: ${data.order}`;
+                statusMsg.innerHTML = ` အော်ဒါ အောင်မြင်ပါသည်။<br> Order ID: ${data.order}<br> မှာယူသည့် ID: ${service}<br> အရေအတွက်: ${qty}`;
                 statusMsg.style.color = "#00ff00";
             } else if (data.error) {
-                statusMsg.innerText = `❌ Error: ${data.error}`;
+                statusMsg.innerText = ` Error: ${data.error}`;
                 statusMsg.style.color = "#ff0000";
             } else {
-                statusMsg.innerText = "❌ စနစ်ချို့ယွင်းမှု ဖြစ်သွားပါသည်။";
+                statusMsg.innerText = " စနစ်ချို့ယွင်းမှု ဖြစ်သွားပါသည်။";
                 statusMsg.style.color = "#ff0000";
             }
         } catch (error) {
-            statusMsg.innerText = "❌ API နှင့် ချိတ်ဆက်ရတာ အဆင်မပြေပါ။";
+            statusMsg.innerText = " API နှင့် ချိတ်ဆက်ရတာ အဆင်မပြေပါ။";
             statusMsg.style.color = "#ff0000";
         }
     });
