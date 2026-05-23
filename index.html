@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuckyAuraHan - SMM Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #111; color: #fff; text-align: center; padding: 50px; }
+        .container { max-width: 500px; margin: auto; background: #222; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(255,105,180,0.3); }
+        h1 { color: #ff69b4; }
+        select, input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; font-size: 16px; box-sizing: border-box; }
+        button { background: #ff69b4; color: white; font-weight: bold; cursor: pointer; }
+        button:hover { background: #ff1493; }
+        .status { margin-top: 15px; color: #00ff00; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LuckyAuraHan</h1>
+        <p>TikTok Likes, Views, Followers ဝန်ဆောင်မှု</p>
+        
+        <form id="orderForm">
+            <select id="service">
+                <option value="1">TikTok Followers [High Quality]</option>
+                <option value="2">TikTok Likes [Instant]</option>
+                <option value="3">TikTok Views [Super Fast]</option>
+            </select>
+            <input type="url" id="link" placeholder="သင့် TikTok ဗီဒီယို သို့မဟုတ် အကောင့် Link ထည့်ပါ" required>
+            <input type="number" id="quantity" placeholder="အရေအတွက် (ဥပမာ - ၁၀၀၀)" required>
+            <button type="submit">Order တင်မည်</button>
+        </form>
+        <div class="status" id="statusMsg"></div>
+    </div>
+
+    <script>
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const service = document.getElementById('service').value;
+            const link = document.getElementById('link').value;
+            const qty = document.getElementById('quantity').value;
+            const statusMsg = document.getElementById('statusMsg');
+
+            statusMsg.innerText = "Order ကို API စနစ်ဖြင့် ဆက်သွယ်နေပါသည်...";
+
+            setTimeout(() => {
+                statusMsg.innerText = "Order တင်ခြင်း အောင်မြင်ပါသည်။ (Demo Mode)";
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
