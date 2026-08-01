@@ -1,82 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuckyAuraHan - SMM Panel</title>
+    <title>LuckyAuraHan AI</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #111; color: #fff; text-align: center; padding: 50px; }
-        .container { max-width: 500px; margin: auto; background: #222; padding: 30px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        h1 { color: #ff69b4; }
-        select, input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; font-size: 16px; box-sizing: border-box; }
-        button { background: #ff69b4; color: white; font-weight: bold; cursor: pointer; }
-        button:hover { background: #ff1493; }
-        .status { margin-top: 15px; color: #00ff00; font-weight: bold; line-height: 1.6; }
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { width: 100%; max-width: 500px; background: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #4f46e5; }
+        input { width: calc(100% - 20px); padding: 12px; margin-top: 10px; border-radius: 5px; border: 1px solid #333; background: #2d2d2d; color: #fff; }
+        button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 5px; border: none; background: #4f46e5; color: white; font-weight: bold; cursor: pointer; }
+        button:hover { background: #4338ca; }
+        .output { margin-top: 15px; background: #2d2d2d; padding: 12px; border-radius: 5px; min-height: 60px; word-break: break-word; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>LuckyAuraHan</h1>
-        <p>TikTok Likes, Views, Followers ဝန်ဆောင်မှု</p>
-        
-        <form id="orderForm">
-            <select id="service">
-                <option value="1000">ID: 1000 - TikTok Followers [High Quality] (Min: 100 / Max: 10000)</option>
-                <option value="2000">ID: 2000 - TikTok Likes [Instant] (Min: 100 / Max: 50000)</option>
-                <option value="3000">ID: 3000 - TikTok Views [Super Fast] (Min: 500 / Max: 100000)</option>
-            </select>
-            <input type="url" id="link" placeholder="သင့် TikTok ဗီဒီယို သို့မဟုတ် အကောင့် Link ထည့်ပါ" required>
-            <input type="number" id="quantity" placeholder="အရေအတွက် ထည့်ပါ (ဥပမာ - ၁၀၀၀)" required>
-            <button type="submit">Order တင်မည်</button>
-        </form>
-        <div class="status" id="statusMsg"></div>
-    </div>
 
-    <script>
-    document.getElementById('orderForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+<div class="container">
+    <h2>LuckyAuraHan AI Chat</h2>
+    
+    <input type="text" id="chatInput" placeholder="ဘာမေးချင်လဲ ရိုက်ထည့်ပါ...">
+    <button onclick="callGeminiChat()">AI ကို မေးမည်</button>
+    <div class="output" id="chatOutput">အဖြေ ဒီမှာ ပေါ်လာပါမယ်...</div>
+</div>
+
+<script>
+    async function callGeminiChat() {
+        const prompt = document.getElementById('chatInput').value;
+        const outputDiv = document.getElementById('chatOutput');
         
-        const api_url = 'https://socialfastmm.com/api/v2';
-        const api_key = 'cd2340c86ff99fba340a21aeaa23bcd'; // Han ရဲ့ API Key အစစ်
+        if (!prompt) {
+            outputDiv.innerText = "ကျေးဇူးပြု၍ စာသား တစ်ခုခု ရိုက်ထည့်ပါ။";
+            return;
+        }
+
+        outputDiv.innerText = "AI စဉ်းစားနေပါသည်...";
         
-        const service = document.getElementById('service').value;
-        const link = document.getElementById('link').value;
-        const qty = document.getElementById('quantity').value;
-        const statusMsg = document.getElementById('statusMsg');
-        
-        statusMsg.innerText = "အော်ဒါကို API SMM စနစ်ဖြင့် ဆောင်ရွက်နေပါသည်...";
-        statusMsg.style.color = "#ff69b4";
+        // Hugging Face သို့မဟုတ် အခြားအခမဲ့ API တစ်ခုခု (သို့) Gemini API Key ထည့်ရန်
+        // မှတ်ချက်။ ။ အောက်ပါနေရာတွင် ကိုယ့်ရဲ့ API Key ကို ထည့်ရပါမည်။
+        const apiKey = "YOUR_API_KEY_HERE"; 
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         try {
-            const response = await fetch(api_url, {
+            const response = await fetch(url, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    key: api_key,
-                    action: 'add',
-                    service: service,
-                    link: link,
-                    quantity: qty
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
-            
             const data = await response.json();
             
-            if (data.order) {
-                statusMsg.innerHTML = ` အော်ဒါ အောင်မြင်ပါသည်။<br> Order ID: ${data.order}<br> မှာယူသည့် ID: ${service}<br> အရေအတွက်: ${qty}`;
-                statusMsg.style.color = "#00ff00";
-            } else if (data.error) {
-                statusMsg.innerText = ` Error: ${data.error}`;
-                statusMsg.style.color = "#ff0000";
+            if (data.candidates && data.candidates.length > 0) {
+                const reply = data.candidates[0].content.parts[0].text;
+                outputDiv.innerText = reply;
             } else {
-                statusMsg.innerText = " စနစ်ချို့ယွင်းမှု ဖြစ်သွားပါသည်။";
-                statusMsg.style.color = "#ff0000";
+                outputDiv.innerText = "အမှားအယွင်း ရှိသွားပါသည်။ ကျေးဇူးပြု၍ API Key ပြန်စစ်ပါ။";
             }
         } catch (error) {
-            statusMsg.innerText = " API နှင့် ချိတ်ဆက်ရတာ အဆင်မပြေပါ။";
-            statusMsg.style.color = "#ff0000";
+            outputDiv.innerText = "ချိတ်ဆက်မှု အမှားအယွင်း ရှိနေပါသည်။";
         }
-    });
-    </script>
+    }
+</script>
+
 </body>
 </html>
