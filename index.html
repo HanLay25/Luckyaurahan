@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <title>LuckyAuraHan AI</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; flex-direction: column; }
         .container { width: 100%; max-width: 500px; background: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         h2 { text-align: center; color: #4f46e5; }
         input { width: calc(100% - 20px); padding: 12px; margin-top: 10px; border-radius: 5px; border: 1px solid #333; background: #2d2d2d; color: #fff; }
         button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 5px; border: none; background: #4f46e5; color: white; font-weight: bold; cursor: pointer; }
         button:hover { background: #4338ca; }
         .output { margin-top: 15px; background: #2d2d2d; padding: 12px; border-radius: 5px; min-height: 60px; word-break: break-word; }
+        video { width: 100%; margin-top: 15px; border-radius: 5px; outline: none; }
     </style>
 </head>
 <body>
@@ -18,6 +19,12 @@
 <div class="container">
     <h2>LuckyAuraHan AI Chat</h2>
     
+    <!-- ဗီဒီယို ထည့်မည့်နေရာ -->
+    <video controls>
+        <source src="YOUR_VIDEO_LINK_OR_FILE.mp4" type="video/mp4">
+        သင့်ဘရောက်ဆာက ဗီဒီယိုကို မပံ့ပိုးပါ။
+    </video>
+
     <input type="text" id="chatInput" placeholder="ဘာမေးချင်လဲ ရိုက်ထည့်ပါ...">
     <button onclick="callGeminiChat()">AI ကို မေးမည်</button>
     <div class="output" id="chatOutput">အဖြေ ဒီမှာ ပေါ်လာပါမယ်...</div>
@@ -35,8 +42,6 @@
 
         outputDiv.innerText = "AI စဉ်းစားနေပါသည်...";
         
-        // Hugging Face သို့မဟုတ် အခြားအခမဲ့ API တစ်ခုခု (သို့) Gemini API Key ထည့်ရန်
-        // မှတ်ချက်။ ။ အောက်ပါနေရာတွင် ကိုယ့်ရဲ့ API Key ကို ထည့်ရပါမည်။
         const apiKey = "YOUR_API_KEY_HERE"; 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
