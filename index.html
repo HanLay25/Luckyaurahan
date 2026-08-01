@@ -2,35 +2,56 @@
 <html lang="my">
 <head>
     <meta charset="UTF-8">
-    <title>LuckyAuraHan AI</title>
+    <title>LuckyAuraHan AI Hub</title>
     <style>
         body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; flex-direction: column; }
-        .container { width: 100%; max-width: 500px; background: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .container { width: 100%; max-width: 500px; background: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-bottom: 20px; }
         h2 { text-align: center; color: #4f46e5; }
-        input { width: calc(100% - 20px); padding: 12px; margin-top: 10px; border-radius: 5px; border: 1px solid #333; background: #2d2d2d; color: #fff; }
+        input, textarea { width: calc(100% - 20px); padding: 12px; margin-top: 10px; border-radius: 5px; border: 1px solid #333; background: #2d2d2d; color: #fff; font-family: sans-serif; }
         button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 5px; border: none; background: #4f46e5; color: white; font-weight: bold; cursor: pointer; }
         button:hover { background: #4338ca; }
         .output { margin-top: 15px; background: #2d2d2d; padding: 12px; border-radius: 5px; min-height: 60px; word-break: break-word; }
-        video { width: 100%; margin-top: 15px; border-radius: 5px; outline: none; }
+        video { width: 100%; margin-top: 10px; border-radius: 5px; outline: none; }
+        .image-box { margin-top: 15px; text-align: center; }
+        .image-box img { max-width: 100%; border-radius: 5px; margin-top: 10px; }
+        hr { border: 0; border-top: 1px solid #333; margin: 20px 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>LuckyAuraHan AI Chat</h2>
-    
-    <!-- ဗီဒီယို ထည့်မည့်နေရာ -->
+    <h2>LuckyAuraHan AI Hub</h2>
+
+    <!-- ၁။ ဗီဒီယို ပြသမည့်နေရာ -->
+    <h3>ဗီဒီယိုကြည့်ရန်</h3>
     <video controls>
         <source src="YOUR_VIDEO_LINK_OR_FILE.mp4" type="video/mp4">
         သင့်ဘရောက်ဆာက ဗီဒီယိုကို မပံ့ပိုးပါ။
     </video>
 
+    <hr>
+
+    <!-- ၂။ AI နှင့် စကားပြောရန် (Chat) -->
+    <h3>AI Chat စကားပြောရန်</h3>
     <input type="text" id="chatInput" placeholder="ဘာမေးချင်လဲ ရိုက်ထည့်ပါ...">
     <button onclick="callGeminiChat()">AI ကို မေးမည်</button>
     <div class="output" id="chatOutput">အဖြေ ဒီမှာ ပေါ်လာပါမယ်...</div>
+
+    <hr>
+
+    <!-- ၃။ ပုံထုတ်ရန် (Image Generation - Imagen) -->
+    <h3>AI ပုံထုတ်ရန်</h3>
+    <input type="text" id="imagePrompt" placeholder="လိုချင်တဲ့ ပုံစံကို အင်္ဂလိပ်လို ရိုက်ပါ (ဥပမာ: futuristic city)...">
+    <button onclick="generateAIImage()">ပုံထုတ်မည်</button>
+    <div class="image-box" id="imageOutputContainer">
+        <div class="output" id="imageOutput">ထုတ်ထားသော ပုံ ဒီမှာ ပေါ်လာပါမယ်...</div>
+    </div>
 </div>
 
 <script>
+    const apiKey = "YOUR_API_KEY_HERE"; // ကိုယ့်ရဲ့ Gemini API Key ထည့်ရန်
+
+    // AI Chat လုပ်ဆောင်ချက်
     async function callGeminiChat() {
         const prompt = document.getElementById('chatInput').value;
         const outputDiv = document.getElementById('chatOutput');
@@ -41,8 +62,6 @@
         }
 
         outputDiv.innerText = "AI စဉ်းစားနေပါသည်...";
-        
-        const apiKey = "YOUR_API_KEY_HERE"; 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         try {
@@ -54,13 +73,49 @@
             const data = await response.json();
             
             if (data.candidates && data.candidates.length > 0) {
-                const reply = data.candidates[0].content.parts[0].text;
-                outputDiv.innerText = reply;
+                outputDiv.innerText = data.candidates[0].content.parts[0].text;
             } else {
-                outputDiv.innerText = "အမှားအယွင်း ရှိသွားပါသည်။ ကျေးဇူးပြု၍ API Key ပြန်စစ်ပါ။";
+                outputDiv.innerText = "အမှားအယွင်း ရှိသွားပါသည်။ API Key ပြန်စစ်ပါ။";
             }
         } catch (error) {
             outputDiv.innerText = "ချိတ်ဆက်မှု အမှားအယွင်း ရှိနေပါသည်။";
+        }
+    }
+
+    // AI ပုံထုတ်လုပ်ဆောင်ချက် (Imagen)
+    async function generateAIImage() {
+        const prompt = document.getElementById('imagePrompt').value;
+        const outputContainer = document.getElementById('imageOutputContainer');
+        
+        if (!prompt) {
+            outputContainer.innerHTML = '<div class="output">ကျေးဇူးပြု၍ ပုံစံဖော်မယ့် စာသား (Prompt) ထည့်ပါ။</div>';
+            return;
+        }
+
+        outputContainer.innerHTML = '<div class="output">AI ပုံဖန်တီးနေပါသည်... ခဏစောင့်ပါ။</div>';
+        
+        // Imagen 3 API endpoint
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    instances: [{ prompt: prompt }],
+                    parameters: { sampleCount: 1, aspectRatio: "1:1" }
+                })
+            });
+            const data = await response.json();
+            
+            if (data.predictions && data.predictions.length > 0) {
+                const base64Image = data.predictions[0].bytesBase64Encoded;
+                outputContainer.innerHTML = `<img src="data:image/jpeg;base64,${base64Image}" alt="Generated AI Image">`;
+            } else {
+                outputContainer.innerHTML = '<div class="output">ပုံထုတ်ယူ၍ မရပါ။ API Key သို့မဟုတ် ခွင့်ပြုချက် စစ်ဆေးပါ။</div>';
+            }
+        } catch (error) {
+            outputContainer.innerHTML = '<div class="output">ချိတ်ဆက်မှု အမှားအယွင်း ရှိနေပါသည်။</div>';
         }
     }
 </script>
